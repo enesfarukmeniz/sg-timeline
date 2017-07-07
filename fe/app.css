@@ -1,0 +1,125 @@
+body {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    background-color: aliceblue;
+    margin-top: 80px;
+}
+
+ul.timeline li .timeline-panel {
+    width: 100%;
+}
+
+timeline-footer {
+    background-color: aliceblue;
+}
+
+timeline-event {
+    display: grid;
+    margin-top: -80px;
+    height: 250px;
+}
+
+timeline-panel:before {
+}
+
+timeline-panel:after {
+    border-left-color: inherit;
+    border-right-color: inherit;
+}
+
+.timeline {
+    margin-top: 100px;
+}
+
+.blacklisted {
+    background-color: #ffedeb;
+}
+
+.beaten {
+    background-color: #e4fff1;
+}
+
+.sg-icons {
+    float: right;
+    display: flex;
+}
+
+.sg-icon {
+    color: #6b7a8c;
+    border-radius: 4px;
+    border: 1px solid #d2d6e0;
+    line-height: 26px;
+    padding: 0 8px;
+    font-weight: bold;
+    display: block;
+    margin: 0 2px 0 2px;
+}
+
+.group-ga {
+    background-image: linear-gradient(#CAEEA7 0%, #B4DF8A 50%, #9AC96A 100%);
+    border-color: #B9D393 #96BC69 #73A442 #A0C870;
+    color: rgba(63, 115, 0, 0.95);
+    text-shadow: 1px 1px 1px rgba(224, 246, 198, 0.5);
+}
+
+.whitelist-ga {
+    background-image: linear-gradient(#D9E3FA 0%, #C0D0F1 100%);
+    border-color: #BECCED #AFC2F0 #95ABDE #B1C4F2 !important;
+    color: #556DA9;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.private-ga {
+    background-image: linear-gradient(#e9ecf3 0%, #d7d8e0 100%);
+    border-color: #d8dbe1 #c8cbd1 #babcc2 #d0d2d8 !important;
+    color: #777c8d;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.region-ga {
+    background-image: linear-gradient(#e9ecf3 0%, #d7d8e0 100%);
+    border-color: #d8dbe1 #c8cbd1 #babcc2 #d0d2d8 !important;
+    color: #777c8d;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.level-ga {
+    border-color: #D9EACA #C3DAAC #AAC68E #c2dca9 !important;
+    color: #719a47 !important;
+    background-image: linear-gradient(#f0f5eb 0%, #dfe5d8 100%) !important;
+}
+
+.fa {
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+.fa-trophy {
+    font-size: 24px;
+}
+
+@media (max-width: 768px) {
+    timeline-event {
+        margin-top: -20px;
+    }
+}
+
+@media (min-width: 768px) {
+    body {
+        width: 738px;
+    }
+}
+
+@media (min-width: 992px) {
+    body {
+        width: 962px;
+    }
+}
+
+@media (min-width: 1200px) {
+    body {
+        width: 1170px;
+    }
+}

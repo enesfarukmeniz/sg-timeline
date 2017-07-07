@@ -1,0 +1,27 @@
+{
+  "name": "sg-timeline-fe",
+  "description": "",
+  "main": "",
+  "authors": [
+    "enesfarukmeniz"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "1.6.4",
+    "angular-timeline": "1.7.0",
+    "bootstrap": "3.3.7",
+    "angular-scroll-animate": "0.9.9",
+    "angular-route": "1.6.4",
+    "angular-sanitize": "1.6.4",
+    "components-font-awesome": "4.7.0",
+    "moment": "2.18.1"
+  }
+}

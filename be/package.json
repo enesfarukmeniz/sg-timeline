@@ -1,0 +1,19 @@
+{
+  "name": "sg-timeline-be",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "enesfarukmeniz@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "0.22.0",
+    "cors": "2.8.3",
+    "express": "4.15.2",
+    "is-empty": "1.2.0",
+    "node-json-db": "0.7.3",
+    "request": "2.81.0"
+  }
+}

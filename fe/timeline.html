@@ -1,0 +1,59 @@
+<div class="container-fluid">
+    <h1>SG Timeline</h1>
+    <button ng-click="reverse()">reverse</button>
+    <p style="white-space: pre">
+        total: {{events.length}}
+        blacklisted: {{stats.blacklisted}} - {{100 * stats.blacklisted / events.length}}%
+        beaten: {{stats.beaten}} - {{100 * stats.beaten / events.length}}%
+        remain: {{events.length - stats.beaten - stats.blacklisted}} - {{100 * (events.length - stats.beaten - stats.blacklisted) / events.length}}%
+        active: {{stats.active}}
+    </p>
+
+    <timeline>
+        <timeline-event ng-repeat="event in events">
+
+            <timeline-badge class="{{event.badge}} timeline-hidden"
+                            when-visible="animateElementIn" when-not-visible="animateElementOut">
+                <i class="fa fa-trophy"></i>
+            </timeline-badge>
+
+            <timeline-panel class="{{event.stat.type}} timeline-hidden"
+                            when-visible="animateElementIn" when-not-visible="animateElementOut">
+                <timeline-heading>
+
+                    <div class="sg-icons">
+                        <span class="sg-icon group-ga" ng-if="event.types.includes('group')">
+                            <i class="fa fa-fw fa-user"></i>
+                        </span>
+                        <span class="sg-icon whitelist-ga" ng-if="event.types.includes('whitelist')">
+                            <i class="fa fa-fw fa-heart"></i>
+                        </span>
+                        <span class="sg-icon private-ga" ng-if="event.types.includes('private')">
+                            <i class="fa fa-fw fa-lock"></i>
+                        </span>
+                        <span class="sg-icon region-ga" ng-if="event.types.includes('region')">
+                            <i class="fa fa-fw fa-globe"></i>
+                        </span>
+                        <span class="sg-icon level-ga" ng-if="event.level > 0">
+                            Level {{event.level}}+
+                        </span>
+                    </div>
+                    <h4>{{event.title}}</h4>
+
+                    <p ng-if="event.when">
+                        <small class="text-muted"><i class="glyphicon glyphicon-time"></i>{{event.when}}</small>
+                    </p>
+                    <p ng-if="event.stat">
+                        Played {{event.stat.time}}
+                    </p>
+                    <p ng-if="event.titleContentHtml" ng-bind-html="event.titleContentHtml">
+                    </p>
+                </timeline-heading>
+                <p ng-bind-html="event.contentHtml"></p>
+                <timeline-footer ng-if="event.footerContentHtml">
+                    <span ng-bind-html="event.footerContentHtml"></span>
+                </timeline-footer>
+            </timeline-panel>
+        </timeline-event>
+    </timeline>
+</div>
