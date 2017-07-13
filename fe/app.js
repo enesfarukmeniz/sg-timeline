@@ -32,23 +32,24 @@ app.controller('AppController', function ($scope, $http) {
         "beaten": 0,
         "active": 0,
         "played": 0 //for dummying
-    }
+    };
 
     $http.get('http://localhost:8082/giveaways').then(function (response) {
         var giveaways = response.data;
         $http.get('http://localhost:8082/stats').then(function (response) {
             var stats = response.data;
             angular.forEach(giveaways, function (giveaway) {
-                giveaway.game.image = giveaway.game.image ? giveaway.game.image : "http://cdn.akamai.steamstatic.com/steam/apps/582270/capsule_184x69.jpg";
+                giveaway.game.image = giveaway.game.image ? giveaway.game.image : "capsule_qm.png";
                 var event = {
                     badge: "primary",
-                    title: giveaway.game.name,
+                    game: giveaway.game,
                     when: moment(new Date(giveaway.winDate * 1000)).format("DD MMMM YYYY"),
-                    titleContentHtml: '<a target="_blank" href="' + giveaway.game.steamlink + '"><img class="img-responsive" src="' + giveaway.game.image + '"></a>',
-                    contentHtml: "<span style='color:#2d7c18;'>From <a target='_blank' href='" + giveaway.creator.url + "'>" + giveaway.creator.name + "</a></span>",
+                    creator: giveaway.creator,
                     types: giveaway.types,
                     level: giveaway.level,
-                    stat: null
+                    stat: {
+                        time: "0h 0m"
+                    }
                 };
 
                 angular.forEach(Object.keys($scope.badgeMap), function (key) {
@@ -61,7 +62,7 @@ app.controller('AppController', function ($scope, $http) {
                             });
                             event.stat = {
                                 type: key,
-                                time: parseInt(duration.asHours()) + "h " + duration.minutes() + "m"
+                                time: duration.isValid() ? (parseInt(duration.asHours()) + "h " + duration.minutes() + "m") : "N/A"
                             }
                         }
                     });
@@ -71,11 +72,28 @@ app.controller('AppController', function ($scope, $http) {
             }, $scope.events);
 
         });
-
-        $scope.reverse = function () {
-            $scope.events.reverse()
-        }
     });
+
+    $scope.eventKeys = {
+        warning: true,
+        danger: true,
+        success: true,
+        primary: true
+    };
+
+    $scope.toggle = function (key) {
+        $scope.eventKeys[key] = !$scope.eventKeys[key];
+    };
+
+    $scope.reversed = false;
+    $scope.reverse = function () {
+        $scope.events.reverse();
+        $scope.reversed = !$scope.reversed;
+    };
+
+    $scope.eventFilterer = function (event) {
+        return $scope.eventKeys[event.badge];
+    };
 
     $scope.animateElementIn = function ($el) {
         $el.removeClass('timeline-hidden');

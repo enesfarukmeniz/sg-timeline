@@ -1,6 +1,28 @@
 <div class="container-fluid">
     <h1>SG Timeline</h1>
-    <button ng-click="reverse()">reverse</button>
+
+    <div class="buttons">
+        <timeline-badge class="sort" ng-click="reverse()">
+            <i class="fa" ng-class="{'fa-sort-asc': !reversed, 'fa-sort-desc': reversed}"></i>
+        </timeline-badge>
+
+        <timeline-badge class="success" ng-class="{marked: !eventKeys['success']}" ng-click="toggle('success')">
+            <i class="fa fa-trophy"></i>
+        </timeline-badge>
+
+        <timeline-badge class="danger" ng-class="{marked: !eventKeys['danger']}" ng-click="toggle('danger')">
+            <i class="fa fa-trophy"></i>
+        </timeline-badge>
+
+        <timeline-badge class="warning" ng-class="{marked: !eventKeys['warning']}" ng-click="toggle('warning')">
+            <i class="fa fa-trophy"></i>
+        </timeline-badge>
+
+        <timeline-badge class="primary" ng-class="{marked: !eventKeys['primary']}" ng-click="toggle('primary')">
+            <i class="fa fa-trophy"></i>
+        </timeline-badge>
+    </div>
+
     <p style="white-space: pre">
         total: {{events.length}}
         blacklisted: {{stats.blacklisted}} - {{100 * stats.blacklisted / events.length}}%
@@ -10,8 +32,7 @@
     </p>
 
     <timeline>
-        <timeline-event ng-repeat="event in events">
-
+        <timeline-event ng-repeat="event in events | filter:eventFilterer">
             <timeline-badge class="{{event.badge}} timeline-hidden"
                             when-visible="animateElementIn" when-not-visible="animateElementOut">
                 <i class="fa fa-trophy"></i>
@@ -20,7 +41,6 @@
             <timeline-panel class="{{event.stat.type}} timeline-hidden"
                             when-visible="animateElementIn" when-not-visible="animateElementOut">
                 <timeline-heading>
-
                     <div class="sg-icons">
                         <span class="sg-icon group-ga" ng-if="event.types.includes('group')">
                             <i class="fa fa-fw fa-user"></i>
@@ -38,21 +58,22 @@
                             Level {{event.level}}+
                         </span>
                     </div>
-                    <h4>{{event.title}}</h4>
-
-                    <p ng-if="event.when">
+                    <h4>{{event.game.name}}</h4>
+                    <p>
                         <small class="text-muted"><i class="glyphicon glyphicon-time"></i>{{event.when}}</small>
                     </p>
-                    <p ng-if="event.stat">
-                        Played {{event.stat.time}}
-                    </p>
-                    <p ng-if="event.titleContentHtml" ng-bind-html="event.titleContentHtml">
-                    </p>
                 </timeline-heading>
-                <p ng-bind-html="event.contentHtml"></p>
-                <timeline-footer ng-if="event.footerContentHtml">
-                    <span ng-bind-html="event.footerContentHtml"></span>
-                </timeline-footer>
+                <p>
+                    <a target="_blank" href="{{event.game.steamlink}}">
+                        <img class="img-responsive" ng-src="{{event.game.image}}">
+                    </a>
+                </p>
+                <div ng-if="event.stat">
+                    Played {{event.stat.time}}
+                </div>
+                <div>
+                    From <a target="_blank" href="{{event.creator.url}}">{{event.creator.name}}</a>
+                </div>
             </timeline-panel>
         </timeline-event>
     </timeline>

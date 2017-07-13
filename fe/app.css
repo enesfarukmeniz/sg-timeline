@@ -11,14 +11,23 @@ ul.timeline li .timeline-panel {
     width: 100%;
 }
 
+.timeline-event {
+    margin-bottom: 0;
+}
+
+timeline-panel {
+    height: 214px;
+    border-radius: 14px;
+}
+
 timeline-footer {
     background-color: aliceblue;
 }
 
 timeline-event {
     display: grid;
-    margin-top: -80px;
-    height: 250px;
+    margin-top: -16px;
+    height: 214px;
 }
 
 timeline-panel:before {
@@ -39,6 +48,34 @@ timeline-panel:after {
 
 .beaten {
     background-color: #e4fff1;
+}
+
+.buttons timeline-badge {
+    cursor: pointer;
+}
+
+.buttons timeline-badge.marked {
+    color: black;
+}
+
+.buttons timeline-badge.sort {
+    margin-left: -150px;
+}
+
+.buttons timeline-badge.success {
+    margin-left: -75px;
+}
+
+.buttons timeline-badge.danger {
+    margin-left: 0px;
+}
+
+.buttons timeline-badge.warning {
+    margin-left: 75px;
+}
+
+.buttons timeline-badge.primary {
+    margin-left: 150px;
 }
 
 .sg-icons {
@@ -96,7 +133,7 @@ timeline-panel:after {
     font-size: 14px;
 }
 
-.fa-trophy {
+.fa-trophy, .fa-sort-asc, .fa-sort-desc {
     font-size: 24px;
 }
 
