@@ -24,7 +24,7 @@ request({
     if (!error) {
         const $ = cheerio.load(body);
         $(".list_boxes div").each(function (i, el) {
-            $el = $(el);
+            const $el = $(el);
             if ($el.hasClass("beaten")) {
                 beaten.push({
                     steamid: $el.prop("id"),
@@ -46,7 +46,7 @@ request({
         });
 
         $(".game_box").each(function (i, el) {
-            $el = $(el);
+            const $el = $(el);
             active.push({
                 steamid: $("img", $el).attr("data-gameid"),
                 time: $("img", $el).attr("data-minutestotal")

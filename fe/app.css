@@ -16,7 +16,7 @@ ul.timeline li .timeline-panel {
 }
 
 timeline-panel {
-    height: 214px;
+    height: 210px;
     border-radius: 14px;
 }
 
@@ -26,8 +26,8 @@ timeline-footer {
 
 timeline-event {
     display: grid;
-    margin-top: -16px;
-    height: 214px;
+    margin-top: -40px;
+    height: 210px;
 }
 
 timeline-panel:before {
@@ -36,6 +36,15 @@ timeline-panel:before {
 timeline-panel:after {
     border-left-color: inherit;
     border-right-color: inherit;
+}
+
+timeline-panel .glyphicon {
+    margin-right: 4px;
+    vertical-align: -1px;
+}
+
+timeline-panel .text-muted {
+    line-height: 28px;
 }
 
 .timeline {
@@ -67,7 +76,7 @@ timeline-panel:after {
 }
 
 .buttons timeline-badge.danger {
-    margin-left: 0px;
+    margin-left: 0;
 }
 
 .buttons timeline-badge.warning {

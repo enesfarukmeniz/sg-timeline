@@ -59,9 +59,6 @@
                         </span>
                     </div>
                     <h4>{{event.game.name}}</h4>
-                    <p>
-                        <small class="text-muted"><i class="glyphicon glyphicon-time"></i>{{event.when}}</small>
-                    </p>
                 </timeline-heading>
                 <p>
                     <a target="_blank" href="{{event.game.steamlink}}">
@@ -74,6 +71,9 @@
                 <div>
                     From <a target="_blank" href="{{event.creator.url}}">{{event.creator.name}}</a>
                 </div>
+                <p>
+                    <small class="text-muted"><i class="glyphicon glyphicon-time"></i>{{event.when}}</small>
+                </p>
             </timeline-panel>
         </timeline-event>
     </timeline>
