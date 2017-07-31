@@ -35,7 +35,4 @@ for (giveaway of giveaways) {
 
 delete statistics.played;
 statistics.backlog = (giveaways.length) - (statistics.blacklisted + statistics.beaten + statistics.active);
-let statistic_data = {};
-statistic_data[moment(new Date).isoWeek() - 1] = statistics;
-
-database.push("/statistics", statistic_data);
+database.push("/statistics/" + (moment(new Date).isoWeek() - 1), statistics);
