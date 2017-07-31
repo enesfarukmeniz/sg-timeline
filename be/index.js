@@ -25,9 +25,4 @@ app.get('/statistics', function (req, res) {
     res.end(JSON.stringify(database.getData("/statistics")));
 });
 
-const server = app.listen(8082, function () {
-
-    const host = server.address().address;
-    const port = server.address().port;
-
-});
+app.listen(8082);
