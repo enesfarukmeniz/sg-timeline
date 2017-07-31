@@ -32,37 +32,37 @@ function sendRequest(pageCount) {
                 const steamid = $(".giveaway__heading a:nth-of-type(2)", $el).prop("href").replace(/^.*\/([0-9]+)\/$/, "$1");
                 if (dlcs.indexOf(steamid) == -1) {
                     let types = [];
-                if ($(".giveaway__columns .giveaway__column--whitelist", $el).length) {
-                    types.push("whitelist");
-                }
-                if ($(".giveaway__columns .giveaway__column--group", $el).length) {
-                    types.push("group");
-                }
-                if ($(".giveaway__columns .giveaway__column--invite-only", $el).length) {
-                    types.push("private");
-                }
-                if (!types.length) {
-                    types.push("public");
-                }
-                if ($(".giveaway__columns .giveaway__column--region-restricted", $el).length) {
-                    types.push("region");
-                }
-                giveaways.push({
-                    game: {
-                        name: $(".giveaway__heading__name", $el).html(),
-                        steamid: steamid,
-                        steamlink: $(".giveaway__heading a:nth-of-type(2)", $el).prop("href"),
-                        image: $(".giveaway_image_thumbnail", $el).length ? $(".giveaway_image_thumbnail", $el).css("background-image").replace(/^url\((.*)\)$/, "$1") : ""
-                    },
-                    creator: {
-                        name: $(".giveaway__username", $el).html(),
-                        url: "https://www.steamgifts.com" + $(".giveaway__username", $el).prop("href"),
-                        image: $(".giveaway_image_avatar", $el).css("background-image").replace(/^url\((.*)\)$/, "$1")
-                    },
-                    winDate: $(".giveaway__columns div:first-child span", $el).attr("data-timestamp"),
-                    level: parseInt($(".giveaway__column--contributor-level", $el).length ? $(".giveaway__column--contributor-level", $el).html().replace(/^.*([0-9]+)\+$/, "$1") : 0),
-                    types: types
-                });
+                    if ($(".giveaway__columns .giveaway__column--whitelist", $el).length) {
+                        types.push("whitelist");
+                    }
+                    if ($(".giveaway__columns .giveaway__column--group", $el).length) {
+                        types.push("group");
+                    }
+                    if ($(".giveaway__columns .giveaway__column--invite-only", $el).length) {
+                        types.push("private");
+                    }
+                    if (!types.length) {
+                        types.push("public");
+                    }
+                    if ($(".giveaway__columns .giveaway__column--region-restricted", $el).length) {
+                        types.push("region");
+                    }
+                    giveaways.push({
+                        game: {
+                            name: $(".giveaway__heading__name", $el).html(),
+                            steamid: steamid,
+                            steamlink: $(".giveaway__heading a:nth-of-type(2)", $el).prop("href"),
+                            image: $(".giveaway_image_thumbnail", $el).length ? $(".giveaway_image_thumbnail", $el).css("background-image").replace(/^url\((.*)\)$/, "$1") : ""
+                        },
+                        creator: {
+                            name: $(".giveaway__username", $el).html(),
+                            url: "https://www.steamgifts.com" + $(".giveaway__username", $el).prop("href"),
+                            image: $(".giveaway_image_avatar", $el).css("background-image").replace(/^url\((.*)\)$/, "$1")
+                        },
+                        winDate: $(".giveaway__columns div:first-child span", $el).attr("data-timestamp"),
+                        level: parseInt($(".giveaway__column--contributor-level", $el).length ? $(".giveaway__column--contributor-level", $el).html().replace(/^.*([0-9]+)\+$/, "$1") : 0),
+                        types: types
+                    });
                 }
             });
             const nextPageLink = $(".pagination__navigation a");
