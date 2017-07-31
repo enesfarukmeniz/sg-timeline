@@ -1,5 +1,10 @@
 <div class="container-fluid">
-    <h1>SG Timeline</h1>
+
+    <div class="chart">
+        <canvas id="bar" class="chart chart-bar"
+                chart-data="chartDummyData" chart-labels="chartLabels" chart-dataset-override="chartDatasetOverride" chart-options="chartOptions">
+        </canvas>
+    </div>
 
     <div class="buttons">
         <timeline-badge class="sort" ng-click="reverse()">
@@ -22,14 +27,6 @@
             <i class="fa fa-trophy"></i>
         </timeline-badge>
     </div>
-
-    <p style="white-space: pre">
-        total: {{events.length}}
-        blacklisted: {{stats.blacklisted}} - {{100 * stats.blacklisted / events.length}}%
-        beaten: {{stats.beaten}} - {{100 * stats.beaten / events.length}}%
-        remain: {{events.length - stats.beaten - stats.blacklisted}} - {{100 * (events.length - stats.beaten - stats.blacklisted) / events.length}}%
-        active: {{stats.active}}
-    </p>
 
     <timeline>
         <timeline-event ng-repeat="event in events | filter:eventFilterer">

@@ -4,7 +4,7 @@ body {
     margin-right: auto;
     margin-left: auto;
     background-color: aliceblue;
-    margin-top: 80px;
+    margin-top: 48px;
 }
 
 ul.timeline li .timeline-panel {
@@ -48,7 +48,7 @@ timeline-panel .text-muted {
 }
 
 .timeline {
-    margin-top: 100px;
+    margin-top: 160px;
 }
 
 .blacklisted {
@@ -57,6 +57,10 @@ timeline-panel .text-muted {
 
 .beaten {
     background-color: #e4fff1;
+}
+
+.buttons {
+    position: relative;
 }
 
 .buttons timeline-badge {
@@ -144,6 +148,12 @@ timeline-panel .text-muted {
 
 .fa-trophy, .fa-sort-asc, .fa-sort-desc {
     font-size: 24px;
+}
+
+div.chart {
+    width: 70%;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 @media (max-width: 768px) {

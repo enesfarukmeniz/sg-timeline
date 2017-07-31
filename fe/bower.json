@@ -22,6 +22,7 @@
     "angular-route": "1.6.4",
     "angular-sanitize": "1.6.4",
     "components-font-awesome": "4.7.0",
-    "moment": "2.18.1"
+    "moment": "2.18.1",
+    "angular-chart.js": "1.1.1"
   }
 }

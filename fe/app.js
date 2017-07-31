@@ -2,10 +2,11 @@ var app = angular.module('sg-timeline', [
     'ngRoute',
     'ngSanitize',
     'angular-timeline',
-    'angular-scroll-animate'
+    'angular-scroll-animate',
+    'chart.js'
 ]);
 
-app.config(function ($routeProvider, $locationProvider) {
+app.config(function ($routeProvider, $locationProvider, ChartJsProvider) {
     $routeProvider
         .when("/", {
             templateUrl: "timeline.html"
@@ -14,94 +15,195 @@ app.config(function ($routeProvider, $locationProvider) {
             templateUrl: "timeline.html"
         });
 
-    $locationProvider.html5Mode(true);
+    $locationProvider.html5Mode({
+        enabled: true,
+        requireBase: false
+    });
+
+    ChartJsProvider.setOptions('line', {
+        showLines: false
+    });
 });
 
 app.controller('AppController', function ($scope, $http) {
-    $scope.events = [];
+    $http.get("/config.json").then(function (response) {
+        var remote = response.data.remote;
 
-    $scope.badgeMap = {
-        "active": "warning",
-        "blacklisted": "danger",
-        "beaten": "success",
-        "played": "primary"
-    };
+        var WEEK_COUNT = 15;
 
-    $scope.stats = {
-        "blacklisted": 0,
-        "beaten": 0,
-        "active": 0,
-        "played": 0 //for dummying
-    };
+        $scope.events = [];
 
-    $http.get('http://localhost:8082/giveaways').then(function (response) {
-        var giveaways = response.data;
-        $http.get('http://localhost:8082/stats').then(function (response) {
-            var stats = response.data;
-            angular.forEach(giveaways, function (giveaway) {
-                giveaway.game.image = giveaway.game.image ? giveaway.game.image : "capsule_qm.png";
-                var event = {
-                    badge: "primary",
-                    game: giveaway.game,
-                    when: moment(new Date(giveaway.winDate * 1000)).format("DD MMMM YYYY"),
-                    creator: giveaway.creator,
-                    types: giveaway.types,
-                    level: giveaway.level,
-                    stat: {
-                        time: "0h 0m"
-                    }
-                };
+        $scope.badgeMap = {
+            "active": "warning",
+            "blacklisted": "danger",
+            "beaten": "success",
+            "played": "primary"
+        };
 
-                angular.forEach(Object.keys($scope.badgeMap), function (key) {
-                    angular.forEach(stats[key], function (stat) {
-                        if (giveaway.game.steamid == stat.steamid) {
-                            $scope.stats[key]++;
-                            event.badge = $scope.badgeMap[key];
-                            var duration = moment.duration({
-                                minutes: stat.time
-                            });
-                            event.stat = {
-                                type: key,
-                                time: duration.isValid() ? (parseInt(duration.asHours()) + "h " + duration.minutes() + "m") : "N/A"
-                            }
+        $scope.stats = {
+            "blacklisted": 0,
+            "beaten": 0,
+            "active": 0,
+            "played": 0 //for dummying
+        };
+
+        $http.get(remote + '/giveaways').then(function (response) {
+            var giveaways = response.data;
+            $http.get(remote + '/stats').then(function (response) {
+                var stats = response.data;
+                angular.forEach(giveaways, function (giveaway) {
+                    giveaway.game.image = giveaway.game.image ? giveaway.game.image : "capsule_qm.png";
+                    var event = {
+                        badge: "primary",
+                        game: giveaway.game,
+                        when: moment(new Date(giveaway.winDate * 1000)).format("DD MMMM YYYY"),
+                        creator: giveaway.creator,
+                        types: giveaway.types,
+                        level: giveaway.level,
+                        stat: {
+                            time: "0h 0m"
                         }
+                    };
+
+                    angular.forEach(Object.keys($scope.badgeMap), function (key) {
+                        angular.forEach(stats[key], function (stat) {
+                            if (giveaway.game.steamid == stat.steamid) {
+                                $scope.stats[key]++;
+                                event.badge = $scope.badgeMap[key];
+                                var duration = moment.duration({
+                                    minutes: stat.time
+                                });
+                                event.stat = {
+                                    type: key,
+                                    time: duration.isValid() ? (parseInt(duration.asHours()) + "h " + duration.minutes() + "m") : "N/A"
+                                }
+                            }
+                        });
                     });
-                });
 
-                this.push(event);
-            }, $scope.events);
+                    this.push(event);
+                }, $scope.events);
 
+            });
         });
+
+        $scope.chartDummyData = [[null], [null], [null], [null]];
+        $http.get(remote + '/statistics').then(function (response) {
+            var data = response.data;
+
+            $scope.chartLabels = [];
+            for (var i = WEEK_COUNT; i > 0; i--) {
+                $scope.chartLabels.push("Week " + (moment(new Date).isoWeek() - i));
+            }
+
+            var chartData = {};
+
+            angular.forEach(data, function (week) {
+                angular.forEach(Object.keys(week), function (stat) {
+                    chartData[stat] ? chartData[stat].push(week[stat]) : chartData[stat] = [week[stat]];
+                });
+            });
+
+            angular.forEach(chartData, function (dataSet) {
+                var length = dataSet.length;
+                for (var i = 0; i < WEEK_COUNT - length; i++) {
+                    dataSet.unshift(null);
+                }
+            });
+
+            $scope.chartDatasetOverride = [
+                /* TODO: add won giveaway count
+                 {
+                 label: "Wins",
+                 borderWidth: 6,
+                 type: 'line',
+                 pointBorderColor: "#00ff00",
+                 borderColor: "#70ec69"
+                 },*/
+                {
+                    label: "Beaten",
+                    type: 'bar',
+                    backgroundColor: "#3f903f",
+                    hoverBackgroundColor: "#00ff00",
+                    borderColor: "#fff",
+                    stack: "Stack 0",
+                    borderWidth: 0,
+                    data: chartData.beaten
+                },
+                {
+                    label: "Blacklisted",
+                    type: 'bar',
+                    backgroundColor: "#d9534f",
+                    hoverBackgroundColor: "#ff0000",
+                    borderColor: "#fff",
+                    stack: "Stack 0",
+                    borderWidth: 0,
+                    data: chartData.blacklisted
+                },
+                {
+                    label: "Backlog",
+                    type: 'bar',
+                    backgroundColor: "#2e6da4",
+                    hoverBackgroundColor: "#0000ff",
+                    borderColor: "#fff",
+                    stack: "Stack 1",
+                    borderWidth: 0,
+                    data: chartData.backlog
+                },
+                {
+                    label: "Active",
+                    type: 'bar',
+                    backgroundColor: "#f0ad4e",
+                    hoverBackgroundColor: "#ffff00",
+                    borderColor: "#fff",
+                    stack: "Stack 1",
+                    borderWidth: 0,
+                    data: chartData.active
+                }
+            ];
+
+            $scope.chartOptions = {
+                scales: {
+                    xAxes: [{
+                        stacked: true
+                    }],
+                    yAxes: [{
+                        stacked: true
+                    }]
+                }
+            };
+        });
+
+        $scope.eventKeys = {
+            warning: true,
+            danger: true,
+            success: true,
+            primary: true
+        };
+
+        $scope.toggle = function (key) {
+            $scope.eventKeys[key] = !$scope.eventKeys[key];
+        };
+
+        $scope.reversed = false;
+        $scope.reverse = function () {
+            $scope.events.reverse();
+            $scope.reversed = !$scope.reversed;
+        };
+
+        $scope.eventFilterer = function (event) {
+            return $scope.eventKeys[event.badge];
+        };
+
+        $scope.animateElementIn = function ($el) {
+            $el.removeClass('timeline-hidden');
+            $el.addClass('bounce-in');
+        };
+
+        $scope.animateElementOut = function ($el) {
+            $el.addClass('timeline-hidden');
+            $el.removeClass('bounce-in');
+        };
+
     });
-
-    $scope.eventKeys = {
-        warning: true,
-        danger: true,
-        success: true,
-        primary: true
-    };
-
-    $scope.toggle = function (key) {
-        $scope.eventKeys[key] = !$scope.eventKeys[key];
-    };
-
-    $scope.reversed = false;
-    $scope.reverse = function () {
-        $scope.events.reverse();
-        $scope.reversed = !$scope.reversed;
-    };
-
-    $scope.eventFilterer = function (event) {
-        return $scope.eventKeys[event.badge];
-    };
-
-    $scope.animateElementIn = function ($el) {
-        $el.removeClass('timeline-hidden');
-        $el.addClass('bounce-in');
-    };
-
-    $scope.animateElementOut = function ($el) {
-        $el.addClass('timeline-hidden');
-        $el.removeClass('bounce-in');
-    };
 });

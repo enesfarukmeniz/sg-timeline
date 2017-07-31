@@ -13,6 +13,7 @@
     "cors": "2.8.3",
     "express": "4.15.2",
     "is-empty": "1.2.0",
+    "moment": "2.18.1",
     "node-json-db": "0.7.3",
     "request": "2.81.0"
   }
