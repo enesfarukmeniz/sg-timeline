@@ -87,7 +87,7 @@ app.controller('AppController', function ($scope, $http) {
             });
         });
 
-        $scope.chartDummyData = [[null], [null], [null], [null]];
+        $scope.chartDummyData = [[null], [null], [null], [null], [null]];
         $http.get(remote + '/statistics').then(function (response) {
             var data = response.data;
 
@@ -96,30 +96,35 @@ app.controller('AppController', function ($scope, $http) {
                 $scope.chartLabels.push("Week " + (moment(new Date).isoWeek() - i));
             }
 
-            var chartData = {};
+            var chartData = {
+                "blacklisted": [],
+                "beaten": [],
+                "active": [],
+                "backlog": [],
+                "win": []
+            };
+            for (var i = 1; i <= WEEK_COUNT; i++) {
+                var week = moment(new Date).isoWeek() - i;
 
-            angular.forEach(data, function (week) {
-                angular.forEach(Object.keys(week), function (stat) {
-                    chartData[stat] ? chartData[stat].push(week[stat]) : chartData[stat] = [week[stat]];
+                angular.forEach(Object.keys(chartData), function (key) {
+                    if (data[week] && data[week][key]) {
+                        chartData[key].unshift(data[week][key])
+                    } else {
+                        chartData[key].unshift(0);
+                    }
                 });
-            });
-
-            angular.forEach(chartData, function (dataSet) {
-                var length = dataSet.length;
-                for (var i = 0; i < WEEK_COUNT - length; i++) {
-                    dataSet.unshift(null);
-                }
-            });
+            }
 
             $scope.chartDatasetOverride = [
-                /* TODO: add won giveaway count
-                 {
-                 label: "Wins",
-                 borderWidth: 6,
-                 type: 'line',
-                 pointBorderColor: "#00ff00",
-                 borderColor: "#70ec69"
-                 },*/
+                {
+                    label: "Wins",
+                    borderWidth: 0,
+                    type: 'line',
+                    pointBorderColor: "#000000",
+                    borderColor: "#000000",
+                    pointHoverBackgroundColor: "#ffffff",
+                    data: chartData.win
+                },
                 {
                     label: "Beaten",
                     type: 'bar',
