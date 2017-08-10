@@ -16,6 +16,8 @@ let statistics = {
     "played": 0
 };
 
+const week = (moment(new Date).isoWeek() - 1);
+let wins = 0;
 let flag;
 for (giveaway of giveaways) {
     flag = false;
@@ -31,8 +33,13 @@ for (giveaway of giveaways) {
             break;
         }
     }
+
+    if (moment.unix(giveaway.winDate).isoWeek() == week) {
+        wins++;
+    }
 }
 
 delete statistics.played;
 statistics.backlog = (giveaways.length) - (statistics.blacklisted + statistics.beaten + statistics.active);
+statistics.win = wins;
 database.push("/statistics/" + (moment(new Date).isoWeek() - 1), statistics);
