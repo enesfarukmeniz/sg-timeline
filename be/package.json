@@ -1,6 +1,6 @@
 {
   "name": "sg-timeline-be",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "express": "4.15.2",
     "is-empty": "1.2.0",
     "moment": "2.18.1",
-    "node-json-db": "0.7.3",
+    "mysql": "2.14.1",
     "request": "2.81.0"
   }
 }

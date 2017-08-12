@@ -28,74 +28,40 @@ app.config(function ($routeProvider, $locationProvider, ChartJsProvider) {
 app.controller('AppController', function ($scope, $http) {
     $http.get("/config.json").then(function (response) {
         var remote = response.data.remote;
-
-        var WEEK_COUNT = 15;
-
         $scope.events = [];
-
-        $scope.badgeMap = {
+        var badgeMap = {
             "active": "warning",
             "blacklisted": "danger",
             "beaten": "success",
-            "played": "primary"
+            "backlog": "primary"
         };
 
-        $scope.stats = {
-            "blacklisted": 0,
-            "beaten": 0,
-            "active": 0,
-            "played": 0 //for dummying
-        };
-
-        $http.get(remote + '/giveaways').then(function (response) {
-            var giveaways = response.data;
-            $http.get(remote + '/stats').then(function (response) {
-                var stats = response.data;
-                angular.forEach(giveaways, function (giveaway) {
-                    giveaway.game.image = giveaway.game.image ? giveaway.game.image : "capsule_qm.png";
-                    var event = {
-                        badge: "primary",
-                        game: giveaway.game,
-                        when: moment(new Date(giveaway.winDate * 1000)).format("DD MMMM YYYY"),
-                        creator: giveaway.creator,
-                        types: giveaway.types,
-                        level: giveaway.level,
-                        stat: {
-                            time: "0h 0m"
-                        }
-                    };
-
-                    angular.forEach(Object.keys($scope.badgeMap), function (key) {
-                        angular.forEach(stats[key], function (stat) {
-                            if (giveaway.game.steamid == stat.steamid) {
-                                $scope.stats[key]++;
-                                event.badge = $scope.badgeMap[key];
-                                var duration = moment.duration({
-                                    minutes: stat.time
-                                });
-                                event.stat = {
-                                    type: key,
-                                    time: duration.isValid() ? (parseInt(duration.asHours()) + "h " + duration.minutes() + "m") : "N/A"
-                                }
-                            }
-                        });
+        $http.get(remote + '/games').then(function (response) {
+            angular.forEach(response.data, function (game) {
+                if (game.game_image_url == null) {
+                    game.game_image_url = "capsule_qm.png";
+                }
+                game.types = game.types.split(",");
+                game.badge = badgeMap[game.current_status];
+                game.giveaway_win_date = moment(game.giveaway_win_date).format("DD MMMM YYYY");
+                if (game.playtime != -1) {
+                    var duration = moment.duration({
+                        minutes: game.playtime
                     });
-
-                    this.push(event);
-                }, $scope.events);
-
-            });
+                    game.playtime = parseInt(duration.asHours()) + "h " + duration.minutes() + "m";
+                }
+                else {
+                    game.playtime = "N/A";
+                }
+                this.push(game);
+            }, $scope.events);
         });
 
         $scope.chartDummyData = [[null], [null], [null], [null], [null]];
+
         $http.get(remote + '/statistics').then(function (response) {
-            var data = response.data;
 
             $scope.chartLabels = [];
-            for (var i = WEEK_COUNT; i > 0; i--) {
-                $scope.chartLabels.push("Week " + (moment(new Date).isoWeek() - i));
-            }
-
             var chartData = {
                 "blacklisted": [],
                 "beaten": [],
@@ -103,17 +69,13 @@ app.controller('AppController', function ($scope, $http) {
                 "backlog": [],
                 "win": []
             };
-            for (var i = 1; i <= WEEK_COUNT; i++) {
-                var week = moment(new Date).isoWeek() - i;
 
-                angular.forEach(Object.keys(chartData), function (key) {
-                    if (data[week] && data[week][key]) {
-                        chartData[key].unshift(data[week][key])
-                    } else {
-                        chartData[key].unshift(0);
-                    }
+            angular.forEach(response.data, function (statistic) {
+                $scope.chartLabels.unshift("Week " + (moment(statistic.statistics_date).isoWeek()));
+                angular.forEach(Object.keys(chartData), function (chartDataKey) {
+                    chartData[chartDataKey].unshift(statistic[chartDataKey]);
                 });
-            }
+            });
 
             $scope.chartDatasetOverride = [
                 {
@@ -166,7 +128,6 @@ app.controller('AppController', function ($scope, $http) {
                     data: chartData.active
                 }
             ];
-
             $scope.chartOptions = {
                 scales: {
                     xAxes: [{

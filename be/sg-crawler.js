@@ -1,8 +1,9 @@
 const request = require('request');
 const cheerio = require('cheerio');
-const JsonDB = require('node-json-db');
+const moment = require('moment');
+const mysql = require('mysql');
 
-let database = new JsonDB("data/db", true, true);
+let connection = mysql.createConnection(require("./config.json"));
 
 let giveaways = [];
 
@@ -24,55 +25,65 @@ function sendRequest(pageCount) {
     }, function (error, response, body) {
         if (!error) {
             const $ = cheerio.load(body);
-            const dlcs = database.getData("/dlc");
 
-            $(".giveaway__row-inner-wrap").each(function (i, el) {
-                const $el = $(el);
+            connection.query('SELECT steam_id FROM dlcs', function (error, results, fields) {
+                if (error) throw error;
+                const dlcs = results.map(function (row) {
+                    return row.steam_id;
+                });
 
-                const steamid = $(".giveaway__heading a:nth-of-type(2)", $el).prop("href").replace(/^.*\/([0-9]+)\/$/, "$1");
-                if (dlcs.indexOf(steamid) == -1) {
-                    let types = [];
-                    if ($(".giveaway__columns .giveaway__column--whitelist", $el).length) {
-                        types.push("whitelist");
+                $(".giveaway__row-inner-wrap").each(function (i, el) {
+                    const $el = $(el);
+
+                    const steamid = parseInt($(".giveaway__heading a:nth-of-type(2)", $el).prop("href").replace(/^.*\/([0-9]+)\/$/, "$1"));
+                    if (dlcs.indexOf(steamid) == -1) {
+                        let types = [];
+                        if ($(".giveaway__columns .giveaway__column--whitelist", $el).length) {
+                            types.push("whitelist");
+                        }
+                        if ($(".giveaway__columns .giveaway__column--group", $el).length) {
+                            types.push("group");
+                        }
+                        if ($(".giveaway__columns .giveaway__column--invite-only", $el).length) {
+                            types.push("private");
+                        }
+                        if (!types.length) {
+                            types.push("public");
+                        }
+                        if ($(".giveaway__columns .giveaway__column--region-restricted", $el).length) {
+                            types.push("region");
+                        }
+                        giveaways.push({
+                            steam_id: steamid,
+                            steam_link: $(".giveaway__heading a:nth-of-type(2)", $el).prop("href"),
+                            game_name: $(".giveaway__heading__name", $el).html(),
+                            game_image_url: $(".giveaway_image_thumbnail", $el).length ? $(".giveaway_image_thumbnail", $el).css("background-image").replace(/^url\((.*)\)$/, "$1") : null,
+                            creator_name: $(".giveaway__username", $el).html(),
+                            creator_profile_url: "https://www.steamgifts.com" + $(".giveaway__username", $el).prop("href"),
+                            creator_image_url: $(".giveaway_image_avatar", $el).css("background-image").replace(/^url\((.*)\)$/, "$1"),
+                            giveaway_win_date: moment.unix($(".giveaway__columns div:first-child span", $el).attr("data-timestamp")).format("YYYY-MM-DD"),
+                            giveaway_level: parseInt($(".giveaway__column--contributor-level", $el).length ? $(".giveaway__column--contributor-level", $el).html().replace(/^.*([0-9]+)\+$/, "$1") : 0),
+                            types: types.join(',')
+                        });
                     }
-                    if ($(".giveaway__columns .giveaway__column--group", $el).length) {
-                        types.push("group");
-                    }
-                    if ($(".giveaway__columns .giveaway__column--invite-only", $el).length) {
-                        types.push("private");
-                    }
-                    if (!types.length) {
-                        types.push("public");
-                    }
-                    if ($(".giveaway__columns .giveaway__column--region-restricted", $el).length) {
-                        types.push("region");
-                    }
-                    giveaways.push({
-                        game: {
-                            name: $(".giveaway__heading__name", $el).html(),
-                            steamid: steamid,
-                            steamlink: $(".giveaway__heading a:nth-of-type(2)", $el).prop("href"),
-                            image: $(".giveaway_image_thumbnail", $el).length ? $(".giveaway_image_thumbnail", $el).css("background-image").replace(/^url\((.*)\)$/, "$1") : ""
-                        },
-                        creator: {
-                            name: $(".giveaway__username", $el).html(),
-                            url: "https://www.steamgifts.com" + $(".giveaway__username", $el).prop("href"),
-                            image: $(".giveaway_image_avatar", $el).css("background-image").replace(/^url\((.*)\)$/, "$1")
-                        },
-                        winDate: $(".giveaway__columns div:first-child span", $el).attr("data-timestamp"),
-                        level: parseInt($(".giveaway__column--contributor-level", $el).length ? $(".giveaway__column--contributor-level", $el).html().replace(/^.*([0-9]+)\+$/, "$1") : 0),
-                        types: types
+                });
+                const nextPageLink = $(".pagination__navigation a");
+                const lastPage = $(nextPageLink[nextPageLink.length - 1]).hasClass("is-selected");
+
+                if (lastPage) {
+                    giveaways = giveaways.map(function (giveaway) {
+                        return Object.values(giveaway);
                     });
+                    const query = 'INSERT IGNORE INTO games'
+                        + '(steam_id, steam_link, game_name, game_image_url, creator_name, creator_profile_url, creator_image_url, giveaway_win_date, giveaway_level, types) VALUES ?';
+                    connection.query(query, [giveaways], function (error, results, fields) {
+                        if (error) throw error;
+                    });
+                    connection.end();
+                } else {
+                    sendRequest(++pageCount);
                 }
             });
-            const nextPageLink = $(".pagination__navigation a");
-            const lastPage = $(nextPageLink[nextPageLink.length - 1]).hasClass("is-selected");
-
-            if (lastPage) {
-                database.push("/sg-giveaways", giveaways);
-            } else {
-                sendRequest(++pageCount);
-            }
         }
     });
 }

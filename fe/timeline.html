@@ -35,7 +35,7 @@
                 <i class="fa fa-trophy"></i>
             </timeline-badge>
 
-            <timeline-panel class="{{event.stat.type}} timeline-hidden"
+            <timeline-panel class="{{event.current_status}} timeline-hidden"
                             when-visible="animateElementIn" when-not-visible="animateElementOut">
                 <timeline-heading>
                     <div class="sg-icons">
@@ -51,25 +51,26 @@
                         <span class="sg-icon region-ga" ng-if="event.types.includes('region')">
                             <i class="fa fa-fw fa-globe"></i>
                         </span>
-                        <span class="sg-icon level-ga" ng-if="event.level > 0">
-                            Level {{event.level}}+
+                        <span class="sg-icon level-ga" ng-if="event.giveaway_level > 0">
+                            Level {{event.giveaway_level}}+
                         </span>
                     </div>
-                    <h4>{{event.game.name}}</h4>
+                    <h4>{{event.game_name}}</h4>
                 </timeline-heading>
                 <p>
-                    <a target="_blank" href="{{event.game.steamlink}}">
-                        <img class="img-responsive" ng-src="{{event.game.image}}">
+                    <a target="_blank" href="{{event.steam_link}}">
+                        <img class="img-responsive" ng-src="{{event.game_image_url}}">
                     </a>
                 </p>
-                <div ng-if="event.stat">
-                    Played {{event.stat.time}}
+                <div>
+                    Played {{event.playtime}}
                 </div>
                 <div>
-                    From <a target="_blank" href="{{event.creator.url}}">{{event.creator.name}}</a>
+                    From <a target="_blank" href="{{event.creator_profile_url}}">{{event.creator_name}}</a>
                 </div>
                 <p>
-                    <small class="text-muted"><i class="glyphicon glyphicon-time"></i>{{event.when}}</small>
+                    <small class="text-muted"><i class="glyphicon glyphicon-time"></i>{{event.giveaway_win_date}}
+                    </small>
                 </p>
             </timeline-panel>
         </timeline-event>

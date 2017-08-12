@@ -1,45 +1,32 @@
-const JsonDB = require('node-json-db');
 const moment = require('moment');
+const mysql = require('mysql');
+moment.locale("tr");
 
-let database = new JsonDB("data/db", true, true);
+let connection = mysql.createConnection(require("./config.json"));
 
-const giveaways = database.getData("/sg-giveaways");
-let sc_statuses = database.getData("/sc-status");
-const manual_mark = database.getData("/manual-mark");
-sc_statuses.beaten = sc_statuses.beaten.concat(manual_mark.beaten);
-sc_statuses.blacklisted = sc_statuses.blacklisted.concat(manual_mark.blacklisted);
+connection.query("SELECT current_status, COUNT(0) AS count FROM games GROUP BY current_status", function (error, results, fields) {
+    if (error) {
+        throw error;
+    }
+    let statistics = {};
+    results.forEach(function (row) {
+        statistics[row.current_status] = row.count;
+    });
 
-let statistics = {
-    "blacklisted": 0,
-    "beaten": 0,
-    "active": 0,
-    "played": 0
-};
-
-const week = (moment(new Date).isoWeek() - 1);
-let wins = 0;
-let flag;
-for (giveaway of giveaways) {
-    flag = false;
-    for (stat of Object.keys(statistics)) {
-        for (sc_status of sc_statuses[stat]) {
-            if (giveaway.game.steamid == sc_status.steamid) {
-                flag = true;
-                statistics[stat]++;
-                break;
+    const date = moment(new Date).subtract(1, "weeks");
+    connection.query("SELECT COUNT(0) AS count FROM games WHERE giveaway_win_date BETWEEN ? AND ?", [date.startOf("week").format("YYYY-MM-DD"),
+        date.endOf("week").format("YYYY-MM-DD")], function (error, results, fields) {
+        if (error) {
+            throw error;
+        }
+        statistics.win = results[0].count;
+        statistics.statistics_date = date.startOf("week").format("YYYY-MM-DD");
+        connection.query('INSERT INTO statistics SET ?', statistics, function (error, results, fields) {
+            if (error) {
+                throw error;
             }
-        }
-        if (flag) {
-            break;
-        }
-    }
+        });
 
-    if (moment.unix(giveaway.winDate).isoWeek() == week) {
-        wins++;
-    }
-}
-
-delete statistics.played;
-statistics.backlog = (giveaways.length) - (statistics.blacklisted + statistics.beaten + statistics.active);
-statistics.win = wins;
-database.push("/statistics/" + (moment(new Date).isoWeek() - 1), statistics);
+        connection.end();
+    });
+});

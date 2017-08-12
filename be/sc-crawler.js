@@ -1,13 +1,9 @@
 const request = require('request');
 const cheerio = require('cheerio');
-const JsonDB = require('node-json-db');
+const mysql = require('mysql');
 
-let database = new JsonDB("data/db", true, true);
+let connection = mysql.createConnection(require("./config.json"));
 
-var beaten = [],
-    blacklisted = [],
-    played = [],
-    active = [];
 request({
     url: "http://www.steamcompletionist.net/76561198047206902/",
     headers: {
@@ -25,40 +21,36 @@ request({
         const $ = cheerio.load(body);
         $(".list_boxes div").each(function (i, el) {
             const $el = $(el);
+            let status = null;
+
             if ($el.hasClass("beaten")) {
-                beaten.push({
-                    steamid: $el.prop("id"),
-                    time: $("img", $el).attr("data-minutestotal")
-                });
+                status = "beaten";
             }
             if ($el.hasClass("blacklisted")) {
-                blacklisted.push({
-                    steamid: $el.prop("id"),
-                    time: $("img", $el).attr("data-minutestotal")
-                });
+                status = "blacklisted";
             }
             if ($el.attr("class") == "list_box") {
-                played.push({
-                    steamid: $el.prop("id"),
-                    time: $("img", $el).attr("data-minutestotal")
-                });
+                status = "backlog";
+            }
+            if (status) {
+                connection.query("UPDATE games SET current_status = ?, playtime = ? WHERE steam_id = ?", [status, $("img", $el).attr("data-minutestotal"), $el.prop("id")],
+                    function (error, results, fields) {
+                        if (error) {
+                            throw error;
+                        }
+                    });
             }
         });
 
         $(".game_box").each(function (i, el) {
             const $el = $(el);
-            active.push({
-                steamid: $("img", $el).attr("data-gameid"),
-                time: $("img", $el).attr("data-minutestotal")
-            });
-
+            connection.query("UPDATE games SET current_status = 'active', playtime = ? WHERE steam_id = ?", [$("img", $el).attr("data-minutestotal"), $("img", $el).attr("data-gameid")],
+                function (error, results, fields) {
+                    if (error) {
+                        throw error;
+                    }
+                });
         });
-
-        database.push("/sc-status", {
-            beaten: beaten,
-            blacklisted: blacklisted,
-            played: played,
-            active: active
-        });
+        connection.end();
     }
 });
