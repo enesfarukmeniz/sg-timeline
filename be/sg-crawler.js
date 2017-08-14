@@ -63,7 +63,7 @@ function sendRequest(pageCount) {
                             creator_name: $(".giveaway__username", $el).html(),
                             creator_profile_url: "https://www.steamgifts.com" + $(".giveaway__username", $el).prop("href"),
                             creator_image_url: $(".giveaway_image_avatar", $el).css("background-image").replace(/^url\((.*)\)$/, "$1"),
-                            giveaway_win_date: moment.unix($(".giveaway__columns div:first-child span", $el).attr("data-timestamp")).format("YYYY-MM-DD"),
+                            giveaway_win_date: moment.unix($(".giveaway__columns div:first-child span", $el).attr("data-timestamp")).format("YYYY-MM-DD HH:mm:ss"),
                             giveaway_level: parseInt($(".giveaway__column--contributor-level", $el).length ? $(".giveaway__column--contributor-level", $el).html().replace(/^.*([0-9]+)\+$/, "$1") : 0),
                             types: types.join(',')
                         });
