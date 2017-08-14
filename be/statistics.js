@@ -1,8 +1,10 @@
+console.log(new Date);
+
 const moment = require('moment');
 const mysql = require('mysql');
 moment.locale("tr");
 
-let connection = mysql.createConnection(require("./config.json"));
+let connection = mysql.createConnection(require("./config.json").db);
 
 connection.query("SELECT current_status, COUNT(0) AS count FROM games GROUP BY current_status", function (error, results, fields) {
     if (error) {
@@ -29,4 +31,8 @@ connection.query("SELECT current_status, COUNT(0) AS count FROM games GROUP BY c
 
         connection.end();
     });
+});
+
+process.on('unhandledRejection', function (error, promise) {
+    console.log(error);
 });

@@ -1,8 +1,10 @@
+console.log(new Date);
+
 const request = require('request');
 const cheerio = require('cheerio');
 const mysql = require('mysql');
 
-let connection = mysql.createConnection(require("./config.json"));
+let connection = mysql.createConnection(require("./config.json").db);
 
 request({
     url: "http://www.steamcompletionist.net/76561198047206902/",
@@ -52,5 +54,11 @@ request({
                 });
         });
         connection.end();
+    } else {
+        console.log(error);
     }
+});
+
+process.on('unhandledRejection', function (error, promise) {
+    console.log(error);
 });

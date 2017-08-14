@@ -2,7 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql');
 
-let connection = mysql.createConnection(require("./config.json"));
+const config = require("./config.json");
+
+let connection = mysql.createConnection(config.db);
 
 let app = express();
 app.use(cors());
@@ -19,4 +21,4 @@ app.get('/statistics', function (req, res) {
     });
 });
 
-app.listen(8082);
+app.listen(config.listen);

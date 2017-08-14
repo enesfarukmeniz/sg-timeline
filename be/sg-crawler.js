@@ -1,9 +1,11 @@
+console.log(new Date);
+
 const request = require('request');
 const cheerio = require('cheerio');
 const moment = require('moment');
 const mysql = require('mysql');
 
-let connection = mysql.createConnection(require("./config.json"));
+let connection = mysql.createConnection(require("./config.json").db);
 
 let giveaways = [];
 
@@ -84,8 +86,14 @@ function sendRequest(pageCount) {
                     sendRequest(++pageCount);
                 }
             });
+        } else {
+            console.log(error);
         }
     });
 }
 
 sendRequest(1);
+
+process.on('unhandledRejection', function (error, promise) {
+    console.log(error);
+});
