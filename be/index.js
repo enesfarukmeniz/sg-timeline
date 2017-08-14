@@ -10,7 +10,7 @@ let app = express();
 app.use(cors());
 
 app.get('/games', function (req, res) {
-    connection.query('SELECT * FROM games', function (error, results, fields) {
+    connection.query('SELECT * FROM games ORDER BY giveaway_win_date DESC', function (error, results, fields) {
         res.end(JSON.stringify(results));
     });
 });
