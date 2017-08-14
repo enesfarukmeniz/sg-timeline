@@ -43,7 +43,7 @@ app.controller('AppController', function ($scope, $http) {
                 }
                 game.types = game.types.split(",");
                 game.badge = badgeMap[game.current_status];
-                game.giveaway_win_date = moment(game.giveaway_win_date).format("DD MMMM YYYY");
+                game.giveaway_win_date = moment(game.giveaway_win_date).utc().format("DD MMMM YYYY");
                 if (game.playtime != -1) {
                     var duration = moment.duration({
                         minutes: game.playtime
