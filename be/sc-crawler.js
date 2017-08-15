@@ -1,4 +1,4 @@
-console.log(new Date);
+console.log("sc-crawler", new Date);
 
 const request = require('request');
 const cheerio = require('cheerio');

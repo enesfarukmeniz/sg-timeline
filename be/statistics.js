@@ -1,4 +1,4 @@
-console.log(new Date);
+console.log("statistics", new Date);
 
 const moment = require('moment');
 const mysql = require('mysql');
