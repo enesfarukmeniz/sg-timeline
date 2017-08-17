@@ -59,6 +59,10 @@ timeline-panel .text-muted {
     background-color: #e4fff1;
 }
 
+.active {
+    background-color: #fdfce0;
+}
+
 .buttons {
     position: relative;
 }
