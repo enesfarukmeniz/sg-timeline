@@ -55,7 +55,7 @@
                             Level {{event.giveaway_level}}+
                         </span>
                     </div>
-                    <h4>{{event.game_name}}</h4>
+                    <h4 ng-bind-html="event.game_name"></h4>
                 </timeline-heading>
                 <p>
                     <a target="_blank" href="{{event.steam_link}}">
