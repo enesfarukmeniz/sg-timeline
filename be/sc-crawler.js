@@ -35,7 +35,7 @@ request({
                 status = "backlog";
             }
             if (status) {
-                connection.query("UPDATE games SET current_status = ?, playtime = ? WHERE steam_id = ?", [status, $("img", $el).attr("data-minutestotal"), $el.prop("id")],
+                connection.query("UPDATE games SET current_status = ?, playtime = ? WHERE steam_id_real = ?", [status, $("img", $el).attr("data-minutestotal"), $el.prop("id")],
                     function (error, results, fields) {
                         if (error) {
                             throw error;
@@ -46,7 +46,7 @@ request({
 
         $(".game_box").each(function (i, el) {
             const $el = $(el);
-            connection.query("UPDATE games SET current_status = 'active', playtime = ? WHERE steam_id = ?", [$("img", $el).attr("data-minutestotal"), $("img", $el).attr("data-gameid")],
+            connection.query("UPDATE games SET current_status = 'active', playtime = ? WHERE steam_id_real = ?", [$("img", $el).attr("data-minutestotal"), $("img", $el).attr("data-gameid")],
                 function (error, results, fields) {
                     if (error) {
                         throw error;

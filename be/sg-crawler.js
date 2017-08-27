@@ -57,6 +57,7 @@ function sendRequest(pageCount) {
                         }
                         giveaways.push({
                             steam_id: steamid,
+                            steam_id_real: steamid,
                             steam_link: $(".giveaway__heading a:nth-of-type(2)", $el).prop("href"),
                             game_name: $(".giveaway__heading__name", $el).html(),
                             game_image_url: $(".giveaway_image_thumbnail", $el).length ? $(".giveaway_image_thumbnail", $el).css("background-image").replace(/^url\((.*)\)$/, "$1") : null,
@@ -77,7 +78,7 @@ function sendRequest(pageCount) {
                         return Object.values(giveaway);
                     });
                     const query = 'INSERT IGNORE INTO games'
-                        + '(steam_id, steam_link, game_name, game_image_url, creator_name, creator_profile_url, creator_image_url, giveaway_win_date, giveaway_level, types) VALUES ?';
+                        + '(steam_id, steam_id_real, steam_link, game_name, game_image_url, creator_name, creator_profile_url, creator_image_url, giveaway_win_date, giveaway_level, types) VALUES ?';
                     connection.query(query, [giveaways], function (error, results, fields) {
                         if (error) throw error;
                     });
