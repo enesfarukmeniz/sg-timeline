@@ -11,19 +11,19 @@
             <i class="fa" ng-class="{'fa-sort-asc': !reversed, 'fa-sort-desc': reversed}"></i>
         </timeline-badge>
 
-        <timeline-badge class="success" ng-class="{marked: !eventKeys['success']}" ng-click="toggle('success')">
+        <timeline-badge class="success" ng-class="{marked: !eventKeys['success']}" ng-click="toggle('success')" title="Beaten">
             <i class="fa fa-trophy"></i>
         </timeline-badge>
 
-        <timeline-badge class="danger" ng-class="{marked: !eventKeys['danger']}" ng-click="toggle('danger')">
+        <timeline-badge class="danger" ng-class="{marked: !eventKeys['danger']}" ng-click="toggle('danger')" title="Blacklisted">
             <i class="fa fa-trophy"></i>
         </timeline-badge>
 
-        <timeline-badge class="warning" ng-class="{marked: !eventKeys['warning']}" ng-click="toggle('warning')">
+        <timeline-badge class="warning" ng-class="{marked: !eventKeys['warning']}" ng-click="toggle('warning')" title="Active">
             <i class="fa fa-trophy"></i>
         </timeline-badge>
 
-        <timeline-badge class="primary" ng-class="{marked: !eventKeys['primary']}" ng-click="toggle('primary')">
+        <timeline-badge class="primary" ng-class="{marked: !eventKeys['primary']}" ng-click="toggle('primary')" title="Backlog">
             <i class="fa fa-trophy"></i>
         </timeline-badge>
     </div>
