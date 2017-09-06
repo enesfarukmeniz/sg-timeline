@@ -77,6 +77,8 @@ app.controller('AppController', function ($scope, $http) {
                 });
             });
 
+            $scope.chartLabels[$scope.chartLabels.length - 1] = "Current";
+
             $scope.chartDatasetOverride = [
                 {
                     label: "Wins",
