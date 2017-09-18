@@ -31,7 +31,7 @@ request({
             if ($el.hasClass("blacklisted")) {
                 status = "blacklisted";
             }
-            if ($el.attr("class") == "list_box") {
+            if ($el.attr("class") == "list_box" || $el.attr("class") == "list_box unplayed") {
                 status = "backlog";
             }
             if (status) {
