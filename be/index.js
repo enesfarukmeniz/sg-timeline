@@ -17,7 +17,7 @@ app.get('/games', function (req, res) {
 });
 
 app.get('/statistics', function (req, res) {
-    connection.query('SELECT * FROM statistics ORDER BY statistics_date DESC LIMIT 14', function (error, results, fields) {
+    connection.query('SELECT * FROM statistics ORDER BY statistics_date DESC LIMIT 15', function (error, results, fields) {
         let statistics = results;
         connection.query("SELECT current_status, COUNT(0) AS count FROM games GROUP BY current_status", function (error, results, fields) {
             if (error) {
