@@ -14,16 +14,16 @@ connection.query("SELECT current_status, COUNT(0) AS count FROM games GROUP BY c
         statistics[row.current_status] = row.count;
     });
 
-    const date = moment(new Date).utc().subtract(1, "weeks").startOf("isoWeek");
+    const date = moment(new Date).utc().subtract(1, "months").startOf("month");
     connection.query("SELECT COUNT(0) AS count FROM games WHERE giveaway_win_date BETWEEN ? AND ?", [date.format("YYYY-MM-DD HH:mm:ss"),
-                                                                                                     date.clone().add(7, "days").format("YYYY-MM-DD HH:mm:ss")],
+                                                                                                     date.clone().add(1, "months").format("YYYY-MM-DD HH:mm:ss")],
         function (error, results, fields) {
             if (error) {
                 throw error;
             }
             statistics.win = results[0].count;
             statistics.statistics_date = date.format("YYYY-MM-DD");
-            connection.query('INSERT INTO statistics SET ?', statistics, function (error, results, fields) {
+            connection.query('INSERT INTO statistics_monthly SET ?', statistics, function (error, results, fields) {
                 if (error) {
                     throw error;
                 }
