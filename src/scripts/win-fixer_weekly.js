@@ -1,11 +1,11 @@
-console.log("win-fixer", new Date);
+console.log("win-fixer-weekly", new Date);
 
 const moment = require('moment');
 const mysql = require('mysql');
 
-let connection = mysql.createConnection(require("./config.json").db);
+let connection = mysql.createConnection(require("../config.json").db);
 
-connection.query("SELECT statistics_date FROM statistics ORDER BY statistics_date DESC LIMIT 4", function (error, results, fields) {
+connection.query("SELECT statistics_date FROM statistics_weekly ORDER BY statistics_date DESC LIMIT 4", function (error, results, fields) {
     if (error) {
         throw error;
     }
@@ -17,8 +17,8 @@ connection.query("SELECT statistics_date FROM statistics ORDER BY statistics_dat
                 if (error) {
                     throw error;
                 }
-                connection.query('UPDATE statistics SET win = ? WHERE statistics_date = ?', [results[0].count,
-                                                                                             date.format("YYYY-MM-DD")], function (error, results, fields) {
+                connection.query('UPDATE statistics_weekly SET win = ? WHERE statistics_date = ?', [results[0].count,
+                                                                                                    date.format("YYYY-MM-DD")], function (error, results, fields) {
                     if (error) {
                         throw error;
                     }

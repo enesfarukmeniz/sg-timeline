@@ -155,9 +155,23 @@ timeline-panel .text-muted {
 }
 
 div.chart {
-    width: 76%;
+    width: 86%;
     margin-right: auto;
     margin-left: auto;
+}
+
+.carousel .active {
+    background-color: transparent;
+}
+
+.carousel-control {
+    color: #337ab7;
+    opacity: 0.8;
+    width: 0;
+}
+
+.carousel-control span {
+    cursor: pointer;
 }
 
 @media (max-width: 768px) {

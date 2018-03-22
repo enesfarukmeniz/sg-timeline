@@ -4,11 +4,10 @@ const request = require('request');
 const cheerio = require('cheerio');
 const mysql = require('mysql');
 
-let connection = mysql.createConnection(require("./config.json").db);
+let connection = mysql.createConnection(require("../config.json").db);
 
 request({
-    //url: "http://www.steamcompletionist.net/76561198047206902/",
-    url: "http://www.sc.meniz.io/76561198047206902/",
+    url: "https://www.sc.meniz.io/76561198047206902/",
     headers: {
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3053.3 Safari/537.36',
         'Connection': 'keep-alive',

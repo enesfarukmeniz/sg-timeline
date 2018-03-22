@@ -24,7 +24,7 @@ CREATE TABLE games
 );
 CREATE UNIQUE INDEX game_id_uindex ON games (id);
 CREATE UNIQUE INDEX game_steam_id_uindex ON games (steam_id);
-CREATE TABLE statistics
+CREATE TABLE statistics_weekly
 (
     id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     win INT(11) DEFAULT '0' NOT NULL,
@@ -34,8 +34,8 @@ CREATE TABLE statistics
     backlog INT(11) DEFAULT '0' NOT NULL,
     statistics_date DATE NOT NULL
 );
-CREATE UNIQUE INDEX statistics_id_uindex ON statistics (id);
-CREATE UNIQUE INDEX statistics_statistics_date_uindex ON statistics (statistics_date);
+CREATE UNIQUE INDEX statistics_weekly_id_uindex ON statistics_weekly (id);
+CREATE UNIQUE INDEX statistics_weekly_statistics_date_uindex ON statistics_weekly (statistics_date);
 CREATE TABLE statistics_monthly
 (
     id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,

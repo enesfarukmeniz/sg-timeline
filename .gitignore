@@ -1,6 +1,7 @@
 .idea
-*.log
 config.json
-node_modules/
-bower_components/
-data/
+node_modules
+bower_components
+dist
+*.tar.gz
+tmp

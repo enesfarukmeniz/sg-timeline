@@ -1,9 +1,9 @@
-console.log("statistics", new Date);
+console.log("statistics-weekly", new Date);
 
 const moment = require('moment');
 const mysql = require('mysql');
 
-let connection = mysql.createConnection(require("./config.json").db);
+let connection = mysql.createConnection(require("../config.json").db);
 
 connection.query("SELECT current_status, COUNT(0) AS count FROM games GROUP BY current_status", function (error, results, fields) {
     if (error) {
@@ -23,7 +23,7 @@ connection.query("SELECT current_status, COUNT(0) AS count FROM games GROUP BY c
             }
             statistics.win = results[0].count;
             statistics.statistics_date = date.format("YYYY-MM-DD");
-            connection.query('INSERT INTO statistics SET ?', statistics, function (error, results, fields) {
+            connection.query('INSERT INTO statistics_weekly SET ?', statistics, function (error, results, fields) {
                 if (error) {
                     throw error;
                 }

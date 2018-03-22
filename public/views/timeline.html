@@ -1,7 +1,24 @@
 <div class="container-fluid">
 
-    <div class="chart">
-        <canvas id="statisticsChart"></canvas>
+    <div id="chartCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
+        <div class="carousel-inner">
+            <div class="item active">
+                <div class="chart">
+                    <canvas id="statisticsMonthlyChart"></canvas>
+                </div>
+            </div>
+            <div class="item">
+                <div class="chart">
+                    <canvas id="statisticsWeeklyChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <a class="left carousel-control" data-target="#chartCarousel" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </a>
+        <a class="right carousel-control" data-target="#chartCarousel" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
     </div>
 
     <div class="buttons">
@@ -57,7 +74,7 @@
                 </timeline-heading>
                 <p>
                     <a target="_blank" href="{{event.steam_link}}">
-                        <img class="img-responsive" ng-src="{{event.game_image_url}}">
+                        <img class="img-responsive" image-lazy-src="{{event.game_image_url}}">
                     </a>
                 </p>
                 <div>

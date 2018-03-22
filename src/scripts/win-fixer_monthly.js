@@ -1,9 +1,9 @@
-console.log("win-fixer", new Date);
+console.log("win-fixer-monthly", new Date);
 
 const moment = require('moment');
 const mysql = require('mysql');
 
-let connection = mysql.createConnection(require("./config.json").db);
+let connection = mysql.createConnection(require("../config.json").db);
 
 connection.query("SELECT statistics_date FROM statistics_monthly ORDER BY statistics_date DESC LIMIT 1", function (error, results, fields) {
     if (error) {

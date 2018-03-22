@@ -5,7 +5,7 @@ const cheerio = require('cheerio');
 const moment = require('moment');
 const mysql = require('mysql');
 
-let connection = mysql.createConnection(require("./config.json").db);
+let connection = mysql.createConnection(require("../config.json").db);
 
 let giveaways = [];
 

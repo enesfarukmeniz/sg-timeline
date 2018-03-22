@@ -1,9 +1,9 @@
-console.log("statistics", new Date);
+console.log("statistics-monthly", new Date);
 
 const moment = require('moment');
 const mysql = require('mysql');
 
-let connection = mysql.createConnection(require("./config.json").db);
+let connection = mysql.createConnection(require("../config.json").db);
 
 connection.query("SELECT current_status, COUNT(0) AS count FROM games GROUP BY current_status", function (error, results, fields) {
     if (error) {
